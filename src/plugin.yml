@@ -1,0 +1,7 @@
+main: me.nozembr.KipvpAbilities
+name: KbAddoN
+version: 1.0
+commands:
+  kabilities:
+    description: "Comando do plugin"
+    usage: "/kabilities"
