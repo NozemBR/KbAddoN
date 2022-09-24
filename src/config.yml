@@ -8,12 +8,15 @@ grapplercooldown: 2
 #Messages:
 
 GladAlready: '&7Você já estã no gladiador'
-BlockCommandGlad: '&7Sem comandos no gladiador'
+BlockCommandGlad: '&7Sem comandos no gladiador, caso esteja bugado digite &a/desbugar'
 Only-kit-users: '&cVocê só pode usar kit gladiador em pessoas com kit'
 ender-pearl-block: '&4EnderPearl não é permitida em glad'
 NPC-BLOCK: '&4Não é possivel desafiar NPCs'
-NoWinner-Warn: '&bSe em 5 minutos não houver vencedores voltaram para o mesmo local'
-Was-Challenge: '&aVocê foi desafiado para uma arena Glad por: '
-You-Challenge: '&bVocê desafiou o jogador: '
+NoWinner-Warn: '&bSó sairá da jaula do glad o vencedor'
+Was-Challenge: '&aVocê foi desafiado para uma arena Glad por:&c '
+You-Challenge: '&aVocê desafiou o jogador:&c '
 Enemy-Disconnect: '&4Seu oponente desconectou'
-
+full-armor-only: '&4Você só pode desafiar player com Armadura completa'
+no-timelord: '&4Você não pode desafiar jogadores com efeito de Lentidão'
+no-timelord-you: '&4Você não pode desafiar jogadores enquanto você ter efeito de Lentidão'
+Unbug-glad: '&4Você foi desbugado do kit glad'

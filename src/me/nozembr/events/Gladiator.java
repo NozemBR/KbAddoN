@@ -11,6 +11,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.*;
 import org.bukkit.block.*;
 import me.nozembr.KipvpAbilities;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.*;
 import org.bukkit.plugin.*;
 import org.bukkit.*;
@@ -44,7 +46,7 @@ public class Gladiator extends Ability implements Listener {
     static {
         Gladiator.gladiadorkit = new ArrayList<String>();
         Gladiator.emluta = new HashMap<String, String>();
-        Gladiator.prefix = ChatColor.RED + "SGPGLAD ";
+        Gladiator.prefix = ChatColor.RED + "[SGPGLAD] ";
         oldLocation = new HashMap<String, Location>();
         emcombate = new HashMap<Player, Player>();
         blocks = new HashMap<String, List<Location>>();
@@ -110,21 +112,16 @@ public class Gladiator extends Ability implements Listener {
     @EventHandler
     public void OnPlayerCommand(final PlayerCommandPreprocessEvent e) {
         final Player p = e.getPlayer();
-        if (Gladiator.emluta.containsKey(p.getName()) && e.getMessage().startsWith("/")) {
+        if (Gladiator.emluta.containsKey(p.getName()) && !e.getMessage().startsWith("/desbugar")) {
             e.setCancelled(true);
             p.sendMessage(plugin.getConfig().getString("BlockCommandGlad").replace("&", "§"));
         }
+        if (Gladiator.emluta.containsKey(p.getName()) && e.getMessage().startsWith("/desbugar")) {;
+            this.removerdoGlad(p);
+            p.sendMessage(plugin.getConfig().getString("Unbug-glad").replace("&", "§"));
+        }
     }
 
-    public void PlayerData(final PlayerData playerData, final Event event, Player player) {
-        final Player r =  (Player) entidade.getRightClicked();
-        final Kitbattle instance = Kitbattle.getInstance();
-        instance.sendUseAbility(player, playerData);
-
-                if ((PlayerDataManager.get(r) != null && PlayerDataManager.get(r).getKit() == null) || playerData.getMap().isInSpawn(r)) {
-                    player.sendMessage("Only kit users");
-                }
-            }
 
     @EventHandler
     public void onPlayerEntityInteract(final PlayerInteractEntityEvent event) {
@@ -132,9 +129,29 @@ public class Gladiator extends Ability implements Listener {
         if (!(event.getRightClicked() instanceof Player)) {
             return;
         }
+
         final Player r = (Player) event.getRightClicked();
         if (p.getItemInHand().getType() != Material.IRON_FENCE) {
             return;
+        }
+        ItemStack chest = r.getEquipment().getChestplate();
+        ItemStack leggings = r.getEquipment().getLeggings();
+
+        if (chest == null || (leggings == null)) {
+            p.sendMessage(String.valueOf(String.valueOf(Gladiator.prefix)) + (plugin.getConfig().getString("full-armor-only").replace("&", "§")));
+            return;
+        }
+        for (PotionEffect pEffect1 : r.getActivePotionEffects()) {
+            if (pEffect1.getType().equals(PotionEffectType.SLOW)) {
+                p.sendMessage(String.valueOf(String.valueOf(Gladiator.prefix)) + (plugin.getConfig().getString("no-timelord").replace("&", "§")));
+                return;
+            }
+        }
+        for (PotionEffect pEffect : p.getActivePotionEffects()) {
+            if (pEffect.getType().equals(PotionEffectType.SLOW)) {
+                p.sendMessage(String.valueOf(String.valueOf(Gladiator.prefix)) + (plugin.getConfig().getString("no-timelord-you").replace("&", "§")));
+                return;
+            }
         }
         if (Gladiator.emluta.containsKey(p.getName()) || Gladiator.emluta.containsKey(r.getName())) {
             event.setCancelled(true);
@@ -165,10 +182,10 @@ public class Gladiator extends Ability implements Listener {
     }
 
     @EventHandler
-    public void OnPlayerInteract2(final PlayerInteractEvent e) {
-        final Player p = e.getPlayer();
+    public void OnInteract(final PlayerInteractEvent event) {
+        final Player p = event.getPlayer();
         if (p.getItemInHand().getType() == Material.IRON_FENCE) {
-            e.setCancelled(true);
+            event.setCancelled(true);
             p.updateInventory();
         }
     }
